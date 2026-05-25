@@ -3,8 +3,8 @@ const morgan = require('morgan');
 const db = require('./model/index');
 const authRoutes = require('./route/AuthRoute');
 const serviceRoutes = require('./route/ServiceRoute');
-const empresaRoutes = require('./route/EmpresaRoute');      // NOVA
-const historicoRoutes = require('./route/HistoricoRoute');  // NOVA
+const empresaRoutes = require('./route/EmpresaRoute');
+const historicoRoutes = require('./route/HistoricoRoute');
 const setupSwagger = require('./config/swagger');
 const logger = require('./config/logger');
 require('dotenv').config();
@@ -20,8 +20,8 @@ app.use(morgan('dev'));
 setupSwagger(app);
 app.use('/api', authRoutes);
 app.use('/api', serviceRoutes);
-app.use('/api', empresaRoutes);      // NOVA rota
-app.use('/api', historicoRoutes);    // NOVA rota
+app.use('/api', empresaRoutes);
+app.use('/api', historicoRoutes);
 
 app.get('/', (req, res) => {
     res.json({ message: "WorkStock API rodando com sucesso!" });
@@ -33,7 +33,6 @@ async function startServer() {
         await db.sequelize.authenticate();
         logger.info('Conexão com o PostgreSQL realizada via Sequelize com sucesso!');
 
-        // Valida e cria as tabelas e seus índices automaticamente
         await db.sequelize.sync({ alter: true });
         logger.info('Tabelas, colunas e índices validados/criados automaticamente.');
 
@@ -48,3 +47,5 @@ async function startServer() {
 }
 
 startServer();
+
+module.exports = app;

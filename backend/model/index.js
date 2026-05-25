@@ -3,6 +3,7 @@ const UserModel = require('./UserModel');
 const ServiceModel = require('./ServiceModel');
 const EmpresaModel = require('./EmpresaModel');
 const HistoricoModel = require('./HistoricoModel');
+const RefreshTokenModel = require('./RefreshTokenModel');
 
 const db = {
     sequelize,
@@ -10,20 +11,23 @@ const db = {
     User: UserModel,
     ServiceRequest: ServiceModel,
     Empresa: EmpresaModel,
-    Historico: HistoricoModel
+    Historico: HistoricoModel,
+    RefreshToken: RefreshTokenModel
 };
 
 // Associações existentes
 db.User.hasMany(db.ServiceRequest, { foreignKey: 'id_usuario', as: 'servicos' });
 db.ServiceRequest.belongsTo(db.User, { foreignKey: 'id_usuario', as: 'cliente' });
 
-// Associação User 1:1 Empresa
 db.User.hasOne(db.Empresa, { foreignKey: 'id_usuario', as: 'empresa' });
 db.Empresa.belongsTo(db.User, { foreignKey: 'id_usuario', as: 'usuario' });
 
-// Associação Service 1:N Historico
 db.ServiceRequest.hasMany(db.Historico, { foreignKey: 'id_service', as: 'historico' });
 db.Historico.belongsTo(db.ServiceRequest, { foreignKey: 'id_service', as: 'servico' });
+
+// Nova associação: User 1:N RefreshToken
+db.User.hasMany(db.RefreshToken, { foreignKey: 'id_usuario', as: 'refresh_tokens' });
+db.RefreshToken.belongsTo(db.User, { foreignKey: 'id_usuario', as: 'usuario' });
 
 // Método para registrar histórico automaticamente
 db.ServiceRequest.addHook('beforeUpdate', async (service, options) => {

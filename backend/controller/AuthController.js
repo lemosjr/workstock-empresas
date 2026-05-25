@@ -2,13 +2,15 @@ const userService = require('../service/UserService');
 const logger = require('../config/logger');
 
 class AuthController {
-    // C - CREATE: Cadastrar conta [RF002]
     async register(req, res) {
         try {
-            // Os dados já chegam limpos e validados pelo Joi aqui
             const { nome_razao, email, cpf_cnpj, senha, telefone, foto_perfil, tipo_usuario } = req.body;
+            
+            // Captura informações do dispositivo
+            const userAgent = req.headers['user-agent'];
+            const ipAddress = req.ip || req.connection.remoteAddress;
 
-            const newUser = await userService.registerAccount({
+            const result = await userService.registerAccount({
                 nome_razao,
                 email,
                 cpf_cnpj,
@@ -16,42 +18,95 @@ class AuthController {
                 telefone,
                 foto_perfil,
                 tipo_usuario
-            });
+            }, userAgent, ipAddress);
             
             return res.status(201).json({
                 message: 'Conta vinculada ao sistema com sucesso!',
-                user: {
-                    id: newUser.id,
-                    nome_razao: newUser.nome_razao,
-                    email: newUser.email,
-                    tipo_usuario: newUser.tipo_usuario
-                }
+                user: result.user,
+                accessToken: result.accessToken,
+                refreshToken: result.refreshToken
             });
         } catch (error) {
             return res.status(400).json({ error: error.message });
         }
     }
 
-    // R - READ: Efetuar login com entrega de Token JWT [RF001]
     async login(req, res) {
         try {
             const { email, senha } = req.body;
+            
+            // Captura informações do dispositivo
+            const userAgent = req.headers['user-agent'];
+            const ipAddress = req.ip || req.connection.remoteAddress;
 
-            // Executa a autenticação e recebe o objeto contendo user e token
-            const sessionData = await userService.authenticateLogin(email, senha);
+            const result = await userService.authenticateLogin(email, senha, userAgent, ipAddress);
 
-            // Retorna o token para o frontend salvar e autenticar as próximas rotas
             return res.status(200).json({
                 message: 'Login efetuado com sucesso!',
-                user: sessionData.user,
-                token: sessionData.token
+                user: result.user,
+                accessToken: result.accessToken,
+                refreshToken: result.refreshToken
             });
         } catch (error) {
             return res.status(401).json({ error: error.message });
         }
     }
 
-    // R - READ: Listar todos os usuários (Painel Administrativo)
+    async refreshToken(req, res) {
+        try {
+            const { refreshToken } = req.body;
+            
+            if (!refreshToken) {
+                return res.status(400).json({ error: 'Refresh token não fornecido.' });
+            }
+
+            const userAgent = req.headers['user-agent'];
+            const ipAddress = req.ip || req.connection.remoteAddress;
+
+            const result = await userService.refreshAccessToken(refreshToken, userAgent, ipAddress);
+
+            return res.status(200).json({
+                message: 'Token renovado com sucesso!',
+                accessToken: result.accessToken,
+                user: result.user
+            });
+        } catch (error) {
+            return res.status(401).json({ error: error.message });
+        }
+    }
+
+    async logout(req, res) {
+        try {
+            const { refreshToken } = req.body;
+            
+            if (!refreshToken) {
+                return res.status(400).json({ error: 'Refresh token não fornecido.' });
+            }
+
+            await userService.logout(refreshToken);
+
+            return res.status(200).json({
+                message: 'Logout realizado com sucesso!'
+            });
+        } catch (error) {
+            return res.status(400).json({ error: error.message });
+        }
+    }
+
+    async logoutAllDevices(req, res) {
+        try {
+            const userId = req.userId;
+            await userService.logoutAllDevices(userId);
+
+            return res.status(200).json({
+                message: 'Logout de todos os dispositivos realizado com sucesso!'
+            });
+        } catch (error) {
+            return res.status(400).json({ error: error.message });
+        }
+    }
+
+    // Resto dos métodos (getAll, getById, update, delete)
     async getAll(req, res) {
         try {
             const users = await userService.getAllUsers();
@@ -61,7 +116,6 @@ class AuthController {
         }
     }
 
-    // R - READ: Obter perfil específico por ID
     async getById(req, res) {
         try {
             const { id } = req.params;
@@ -81,7 +135,6 @@ class AuthController {
         }
     }
 
-    // U - UPDATE: Editar dados do perfil [RF004]
     async update(req, res) {
         try {
             const { id } = req.params;
@@ -101,7 +154,6 @@ class AuthController {
         }
     }
 
-    // D - DELETE: Excluir conta de usuário
     async delete(req, res) {
         try {
             const { id } = req.params;

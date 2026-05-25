@@ -2,45 +2,34 @@ const { Router } = require('express');
 const authController = require('../controller/AuthController');
 const userValidation = require('../validation/UserValidation');
 const authMiddleware = require('../middleware/AuthMiddleware');
-const userMiddleware = require('../middleware/UserMiddleware'); // NOVO middleware
+const userMiddleware = require('../middleware/UserMiddleware');
 
 const router = Router();
 
 // ==========================================
-// ROTAS PÚBLICAS (Validadas com Joi)
+// ROTAS PÚBLICAS
 // ==========================================
 
-// C - Cadastrar Conta [RF002] com validação estrutural do Joi
 router.post('/auth/register', userValidation.registerSchema, authController.register);
-
-// R - Efetuar Login [RF001] com validação estrutural do Joi (Gera Token JWT)
 router.post('/auth/login', userValidation.loginSchema, authController.login);
 
+// Nova rota: Refresh Token
+router.post('/auth/refresh-token', authController.refreshToken);
 
 // ==========================================
-// ROTAS PRIVADAS (Protegidas por Token JWT)
+// ROTAS PRIVADAS (Requerem autenticação)
 // ==========================================
 
-// R - Listar todos os usuários (Apenas administradores do sistema têm acesso)
+// Nova rota: Logout
+router.post('/auth/logout', authMiddleware.handle, authController.logout);
+
+// Nova rota: Logout de todos dispositivos
+router.post('/auth/logout-all', authMiddleware.handle, authController.logoutAllDevices);
+
+// Rotas de usuário
 router.get('/users', authMiddleware.handle, authMiddleware.authorizeRoles('ADMIN'), authController.getAll);
-
-// R - Obter perfil por ID (Qualquer usuário logado pode consultar)
 router.get('/users/:id', authMiddleware.handle, authController.getById);
-
-// U - Editar dados de perfil [RF004] (Apenas o próprio usuário ou ADMIN)
-router.put(
-    '/users/:id', 
-    authMiddleware.handle, 
-    userMiddleware.checkUserOwnership, // NOVO: verifica se é o dono ou ADMIN
-    authController.update
-);
-
-// D - Excluir conta de usuário (Apenas o próprio usuário ou ADMIN)
-router.delete(
-    '/users/:id', 
-    authMiddleware.handle, 
-    userMiddleware.checkUserOwnership, // NOVO: verifica se é o dono ou ADMIN
-    authController.delete
-);
+router.put('/users/:id', authMiddleware.handle, userMiddleware.checkUserOwnership, authController.update);
+router.delete('/users/:id', authMiddleware.handle, userMiddleware.checkUserOwnership, authController.delete);
 
 module.exports = router;

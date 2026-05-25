@@ -4,6 +4,7 @@ const ServiceModel = require('./ServiceModel');
 const EmpresaModel = require('./EmpresaModel');
 const HistoricoModel = require('./HistoricoModel');
 const RefreshTokenModel = require('./RefreshTokenModel');
+const AvaliacaoModel = require('./AvaliacaoModel');
 
 const db = {
     sequelize,
@@ -12,7 +13,8 @@ const db = {
     ServiceRequest: ServiceModel,
     Empresa: EmpresaModel,
     Historico: HistoricoModel,
-    RefreshToken: RefreshTokenModel
+    RefreshToken: RefreshTokenModel,
+    Avaliacao: AvaliacaoModel
 };
 
 // Associações existentes

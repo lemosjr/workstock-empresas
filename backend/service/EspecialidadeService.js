@@ -53,7 +53,7 @@ class EspecialidadeService {
         }
 
         // Verifica se há empresas vinculadas antes de deletar
-        const vinculos = await empresaEspecialidadeRepository.findByEmpresaId(id);
+        const vinculos = await empresaEspecialidadeRepository.findByEspecialidadeId(id);
         if (vinculos.length > 0) {
             throw new Error('Não é possível excluir uma especialidade que possui empresas vinculadas.');
         }

@@ -1,12 +1,18 @@
-const { EmpresaEspecialidade, Especialidade } = require('../model/index');
+const { EmpresaEspecialidade } = require('../model/index');
 const logger = require('../config/logger');
 
 class EmpresaEspecialidadeRepository {
     // Buscar todas as especialidades vinculadas a uma empresa
     async findByEmpresaId(id_empresa) {
         return await EmpresaEspecialidade.findAll({
-            where: { id_empresa },
-            include: [{ model: Especialidade, as: 'especialidade' }]
+            where: { id_empresa }
+        });
+    }
+
+    // Buscar todos os vínculos de uma especialidade
+    async findByEspecialidadeId(id_especialidade) {
+        return await EmpresaEspecialidade.findAll({
+            where: { id_especialidade }
         });
     }
 

@@ -61,7 +61,7 @@ class EspecialidadeController {
         try {
             const { id } = req.params;
             await especialidadeService.delete(id);
-            return res.status(200).json({ message: 'Especialidade removida com sucesso!' });
+            return res.status(200).json({ message: 'Especialidade removida com sucesso!', id: parseInt(id) });
         } catch (error) {
             logger.error(`Erro ao deletar especialidade: ${error.message}`);
             return res.status(400).json({ error: error.message });

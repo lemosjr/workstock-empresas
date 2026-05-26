@@ -9,7 +9,6 @@ class PostagemValidation {
     /**
      * Validação para criar uma nova postagem.
      * Valida que descricao e fotos estejam dentro dos limites permitidos.
-     * Garante que pelo menos um campo (descricao ou fotos) esteja preenchido.
      * @param {Object} req - Requisição HTTP
      * @param {Object} res - Resposta HTTP
      * @param {Function} next - Próxima função de middleware
@@ -20,17 +19,10 @@ class PostagemValidation {
             descricao: Joi.string().max(1400).allow(null, '').messages({
                 'string.max': 'A descrição não pode exceder 1400 caracteres.'
             }),
-            fotos: Joi.array().items(Joi.string().uri()).allow(null, '').messages({
-                'array.base': 'O campo "fotos" deve ser uma lista de URLs.',
+            fotos: Joi.array().items(Joi.string().uri()).allow(null).messages({
+                'array.base': 'O campo "fotos" deve ser um array de URLs.',
                 'string.uri': 'Todas as fotos devem ser URLs válidas.'
             })
-        }).external(async (obj) => {
-            const temDescricao = obj.descricao && obj.descricao.trim();
-            const temFotos = obj.fotos && Array.isArray(obj.fotos) && obj.fotos.length > 0;
-            
-            if (!temDescricao && !temFotos) {
-                throw new Error('A postagem precisa ter ao menos uma descrição ou uma foto.');
-            }
         });
 
         const { error } = schema.validate(req.body, { abortEarly: false });
@@ -44,7 +36,6 @@ class PostagemValidation {
     /**
      * Validação para atualizar uma postagem.
      * Valida que descricao e fotos estejam dentro dos limites permitidos.
-     * Garante que pelo menos um campo (descricao ou fotos) esteja preenchido.
      * @param {Object} req - Requisição HTTP
      * @param {Object} res - Resposta HTTP
      * @param {Function} next - Próxima função de middleware
@@ -55,17 +46,10 @@ class PostagemValidation {
             descricao: Joi.string().max(1400).allow(null, '').messages({
                 'string.max': 'A descrição não pode exceder 1400 caracteres.'
             }),
-            fotos: Joi.array().items(Joi.string().uri()).allow(null, '').messages({
-                'array.base': 'O campo "fotos" deve ser uma lista de URLs.',
+            fotos: Joi.array().items(Joi.string().uri()).allow(null).messages({
+                'array.base': 'O campo "fotos" deve ser um array de URLs.',
                 'string.uri': 'Todas as fotos devem ser URLs válidas.'
             })
-        }).external(async (obj) => {
-            const temDescricao = obj.descricao && obj.descricao.trim();
-            const temFotos = obj.fotos && Array.isArray(obj.fotos) && obj.fotos.length > 0;
-            
-            if (!temDescricao && !temFotos) {
-                throw new Error('A postagem precisa ter ao menos uma descrição ou uma foto.');
-            }
         });
 
         const { error } = schema.validate(req.body, { abortEarly: false });

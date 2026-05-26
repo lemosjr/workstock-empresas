@@ -31,11 +31,11 @@ const PostagemModel = sequelize.define('Postagem', {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: DataTypes.NOW
-    },
+    }
+,
     fotos: {
-        type: DataTypes.JSON,
-        allowNull: true,
-        comment: 'Array de URLs de fotos em formato JSON'
+        type: DataTypes.ARRAY(DataTypes.STRING(1425)),
+        allowNull: true
     }
 },
 {

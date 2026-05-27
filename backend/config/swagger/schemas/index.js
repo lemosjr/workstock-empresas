@@ -10,7 +10,7 @@ const schemas = {
     ...serviceSchemas,
     ...empresaSchemas,
     ...historicoSchemas,
-    ...especialidadeSchemas
+    ...especialidadeSchemas,
     ...paginationSchema
 };
 

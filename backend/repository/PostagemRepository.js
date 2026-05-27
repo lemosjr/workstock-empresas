@@ -96,3 +96,5 @@ class PostagemRepository {
         return await Postagem.destroy({ where: { id } });
     }
 }
+
+module.exports = new PostagemRepository();

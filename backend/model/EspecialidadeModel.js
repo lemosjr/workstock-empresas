@@ -11,7 +11,7 @@ const EspecialidadeModel = sequelize.define('Especialidade', {
     nome: {
         type: DataTypes.STRING(100),
         allowNull: false,
-        unique: true
+        unique: true // Cada especialidade deve ter um nome único no sistema
     }
 }, {
     tableName: 'especialidade',

@@ -1,16 +1,22 @@
-const { EmpresaEspecialidade, Especialidade } = require('../model/index');
+const { EmpresaEspecialidade } = require('../model/index');
 const logger = require('../config/logger');
 
 class EmpresaEspecialidadeRepository {
-    // Buscar todas as especialidades vinculadas a uma empresa
+    // R - READ: Busca todos os vínculos de especialidades de uma empresa
     async findByEmpresaId(id_empresa) {
         return await EmpresaEspecialidade.findAll({
-            where: { id_empresa },
-            include: [{ model: Especialidade, as: 'especialidade' }]
+            where: { id_empresa }
         });
     }
 
-    // Vincular uma especialidade a uma empresa
+    // R - READ: Busca todos os vínculos de empresas de uma especialidade (usado para validar exclusão)
+    async findByEspecialidadeId(id_especialidade) {
+        return await EmpresaEspecialidade.findAll({
+            where: { id_especialidade }
+        });
+    }
+
+    // C - CREATE: Vincula uma especialidade a uma empresa
     async vincular(id_empresa, id_especialidade) {
         try {
             return await EmpresaEspecialidade.create({ id_empresa, id_especialidade });
@@ -20,7 +26,7 @@ class EmpresaEspecialidadeRepository {
         }
     }
 
-    // Desvincular uma especialidade de uma empresa
+    // D - DELETE: Desvincula uma especialidade de uma empresa
     async desvincular(id_empresa, id_especialidade) {
         const vinculo = await EmpresaEspecialidade.findOne({ where: { id_empresa, id_especialidade } });
         if (!vinculo) return false;
@@ -28,7 +34,7 @@ class EmpresaEspecialidadeRepository {
         return true;
     }
 
-    // Remover todos os vínculos de uma empresa (útil ao sincronizar especialidades no update)
+    // D - DELETE: Remove todos os vínculos de uma empresa (útil ao sincronizar especialidades no update)
     async deleteAllByEmpresa(id_empresa) {
         return await EmpresaEspecialidade.destroy({ where: { id_empresa } });
     }

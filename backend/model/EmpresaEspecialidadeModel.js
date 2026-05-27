@@ -22,7 +22,7 @@ const EmpresaEspecialidadeModel = sequelize.define('EmpresaEspecialidade', {
     }
 }, {
     tableName: 'empresa_especialidade',
-    timestamps: false // Tabela pivô, não necessita de timestamps
+    timestamps: false // Tabela pivô N:N, não necessita de timestamps
 });
 
 module.exports = EmpresaEspecialidadeModel;

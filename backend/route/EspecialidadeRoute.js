@@ -9,17 +9,17 @@ const router = Router();
 // ROTAS PÚBLICAS (Acesso livre)
 // ==========================================
 
-// Listar todas as especialidades disponíveis
+// R - Listar todas as especialidades disponíveis no sistema
 router.get('/especialidades', especialidadeController.getAll);
 
-// Buscar especialidade por ID
+// R - Buscar especialidade por ID
 router.get('/especialidades/:id', especialidadeController.getById);
 
 // ==========================================
 // ROTAS PRIVADAS (Apenas ADMIN)
 // ==========================================
 
-// Criar nova especialidade
+// C - Criar nova especialidade
 router.post(
     '/especialidades',
     authMiddleware.handle,
@@ -28,7 +28,7 @@ router.post(
     especialidadeController.create
 );
 
-// Atualizar especialidade
+// U - Atualizar especialidade existente
 router.put(
     '/especialidades/:id',
     authMiddleware.handle,
@@ -37,7 +37,7 @@ router.put(
     especialidadeController.update
 );
 
-// Deletar especialidade
+// D - Deletar especialidade (bloqueado se houver empresas vinculadas)
 router.delete(
     '/especialidades/:id',
     authMiddleware.handle,

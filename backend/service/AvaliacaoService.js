@@ -25,19 +25,33 @@ class AvaliacaoService {
         if (!empresa) {
             throw new Error('Serviço não encontrada.');
         }
+
+        
     }
 
-    // async getAllAvaliacao(filters = {}) {
-      
-    // }
+    // READ - GET (ALL)
+    async getAllAvaliacao() {
+        return await avaliacaoRepository.findAll()
+    }
+    
+    // READ - GET (by id)
+    async getAvaliacaoById(id) {
+        const avaliacao = await avaliacaoRepository.findById(id);
+        if (!avaliacao) {
+            throw new Error('Avaliacao inexistente!');
+        }
+        return avaliacao;  
+    }
 
-    // async getAvaliacaoById(id) {
-
-    // }
-
-    // async updateAvaliacao(id, updateData) {
-
-    // }
+    // UPDATE - PUT
+    async updateAvaliacao(id, updateData) {
+        const avaliacao = await avaliacaoRepository.findById(id);
+        
+        if (!avaliacao) {
+            throw new Error('Empresa não encontrada.');    
+        }
+        return await avaliacaoRepository.update(id, updateData);      
+    }
 
     // async deleteAvaliacao(id) {
 

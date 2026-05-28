@@ -4,6 +4,7 @@ const ServiceModel = require('./ServiceModel');
 const EmpresaModel = require('./EmpresaModel');
 const HistoricoModel = require('./HistoricoModel');
 const RefreshTokenModel = require('./RefreshTokenModel');
+const PostagemModel = require('./PostagemModel');
 const EspecialidadeModel = require('./EspecialidadeModel');
 const EmpresaEspecialidadeModel = require('./EmpresaEspecialidadeModel');
 const OrcamentoModel = require('./OrcamentoModel'); 
@@ -16,6 +17,7 @@ const db = {
     Empresa: EmpresaModel,
     Historico: HistoricoModel,
     RefreshToken: RefreshTokenModel,
+    Postagem: PostagemModel,
     Especialidade: EspecialidadeModel,
     EmpresaEspecialidade: EmpresaEspecialidadeModel,
     Orcamento: OrcamentoModel 

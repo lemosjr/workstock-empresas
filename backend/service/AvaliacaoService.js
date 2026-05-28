@@ -39,9 +39,16 @@ class AvaliacaoService {
 
     // }
 
-    // async deleteAvaliacao(id) {
+    async deleteAvaliacao(id) {
+        const avaliacao = await avaliacaoRepository.findById(id)
+        const service = await serviceRepository.findById(avaliacao.id_service);
+        const usuario = await serviceRepository.findById(service.id_usuario);
+        if (
+            usuario.tipo_usuario === 'ADMIN'
+        ) {
+            return avaliacaoRepository.delete(id)
+        }
 
-    // }
+    }
 }
-
 module.exports = new AvaliacaoService();

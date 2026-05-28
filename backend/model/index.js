@@ -6,6 +6,7 @@ const HistoricoModel = require('./HistoricoModel');
 const RefreshTokenModel = require('./RefreshTokenModel');
 const EspecialidadeModel = require('./EspecialidadeModel');
 const EmpresaEspecialidadeModel = require('./EmpresaEspecialidadeModel');
+const OrcamentoModel = require('./OrcamentoModel'); 
 
 const db = {
     sequelize,
@@ -16,10 +17,10 @@ const db = {
     Historico: HistoricoModel,
     RefreshToken: RefreshTokenModel,
     Especialidade: EspecialidadeModel,
-    EmpresaEspecialidade: EmpresaEspecialidadeModel
+    EmpresaEspecialidade: EmpresaEspecialidadeModel,
+    Orcamento: OrcamentoModel 
 };
 
-// Associações existentes
 db.User.hasMany(db.ServiceRequest, { foreignKey: 'id_usuario', as: 'servicos' });
 db.ServiceRequest.belongsTo(db.User, { foreignKey: 'id_usuario', as: 'cliente' });
 
@@ -29,15 +30,18 @@ db.Empresa.belongsTo(db.User, { foreignKey: 'id_usuario', as: 'usuario' });
 db.ServiceRequest.hasMany(db.Historico, { foreignKey: 'id_service', as: 'historico' });
 db.Historico.belongsTo(db.ServiceRequest, { foreignKey: 'id_service', as: 'servico' });
 
-// Nova associação: User 1:N RefreshToken
 db.User.hasMany(db.RefreshToken, { foreignKey: 'id_usuario', as: 'refresh_tokens' });
 db.RefreshToken.belongsTo(db.User, { foreignKey: 'id_usuario', as: 'usuario' });
 
-// Nova associação: Empresa N:N Especialidade (via tabela pivô empresa_especialidade)
 db.Empresa.belongsToMany(db.Especialidade, { through: db.EmpresaEspecialidade, foreignKey: 'id_empresa', as: 'especialidades' });
 db.Especialidade.belongsToMany(db.Empresa, { through: db.EmpresaEspecialidade, foreignKey: 'id_especialidade', as: 'empresas' });
 
-// Método para registrar histórico automaticamente
+db.ServiceRequest.hasMany(db.Orcamento, { foreignKey: 'id_solicitacao', as: 'orcamentos' });
+db.Orcamento.belongsTo(db.ServiceRequest, { foreignKey: 'id_solicitacao', as: 'solicitacao' });
+
+db.Empresa.hasMany(db.Orcamento, { foreignKey: 'id_empresa', as: 'orcamentos' });
+db.Orcamento.belongsTo(db.Empresa, { foreignKey: 'id_empresa', as: 'prestador' });
+
 db.ServiceRequest.addHook('beforeUpdate', async (service, options) => {
     if (service.changed('status_solicitacao')) {
         const statusAnterior = service.previous('status_solicitacao');

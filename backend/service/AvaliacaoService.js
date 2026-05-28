@@ -27,9 +27,9 @@ class AvaliacaoService {
         }
     }
 
-    // async getAllAvaliacao(filters = {}) {
-      
-    // }
+    async getAllAvaliacao() {
+        return await avaliacaoRepository.findAll();
+    }
 
     // async getAvaliacaoById(id) {
 

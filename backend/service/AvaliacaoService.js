@@ -4,6 +4,7 @@ const empresaRepository = require('../repository/EmpresaRepository');
 const userRepository = require('../repository/UserRepository');
 const logger = require('../config/logger');
 
+
 class AvaliacaoService {
     // CREATE - POST
     async createAvaliacao(avaliacaoData, serviceId, empresaId) {
@@ -18,14 +19,15 @@ class AvaliacaoService {
             throw new Error('Serviço cancelado ou ainda não finalizado.');
         }
 
-        // Garantir existência da empresa  [CORRIGIDO: era serviceRepository]
+        // Garantir existência da empresa 
         const empresa = await empresaRepository.findById(empresaId);
         if (!empresa) {
             throw new Error('Empresa não encontrada.');
         }
 
         const avaliacao = await avaliacaoRepository.create({
-            ...avaliacaoData,
+            nota: avaliacaoData.nota,
+            comentario: avaliacaoData.comentario,
             id_service: serviceId,
             id_empresa: empresaId
         });
@@ -51,6 +53,7 @@ class AvaliacaoService {
     // UPDATE - PUT
     async updateAvaliacao(id, updateData) {
         const avaliacao = await avaliacaoRepository.findById(id);
+       
         if (!avaliacao) {
             throw new Error('Avaliação não encontrada.');
         }
@@ -69,13 +72,13 @@ class AvaliacaoService {
             throw new Error('Serviço vinculado à avaliação não encontrado.');
         }
 
-        // CORRIGIDO: era serviceRepository.findById para buscar o usuário
+        // Buscar o usuário
         const usuario = await userRepository.findById(service.id_usuario);
         if (!usuario) {
             throw new Error('Usuário vinculado ao serviço não encontrado.');
         }
 
-        // CORRIGIDO: agora lança erro caso o usuário não seja ADMIN
+        // Lançar erro caso o usuário não seja ADMIN
         if (usuario.tipo_usuario !== 'ADMIN') {
             throw new Error('Apenas administradores podem excluir avaliações.');
         }

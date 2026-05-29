@@ -4,6 +4,11 @@ const empresaSchemas = require('./empresa.schema');
 const historicoSchemas = require('./historico.schema');
 const avaliacaoSchemas = require('./avaliacao.schema');
  
+const postagemSchemas = require('./postagem.schema');
+const orcamentoSchema = require('./orcamento.schema');
+const especialidadeSchemas = require('./especialidade.schema');
+const paginationSchema = require('./pagination.schema');
+
 const schemas = {
     ...userSchemas,
     ...serviceSchemas,
@@ -12,4 +17,11 @@ const schemas = {
     ...avaliacaoSchemas
 };
  
+module.exports = schemas;
+    ...postagemSchemas,
+    ...orcamentoSchema,
+    ...especialidadeSchemas,
+    ...paginationSchema
+};
+
 module.exports = schemas;

@@ -5,6 +5,11 @@ const empresaPaths = require('./empresa.paths');
 const historicoPaths = require('./historico.paths');
 const avaliacaoPaths = require('./avaliacao.paths');
  
+const postagemPaths = require('./postagem.paths');
+const orcamentoPaths = require('./orcamento.paths');
+const especialidadePaths = require('./especialidade.paths');
+const empresaEspecialidadePaths = require('./empresa-especialidade.paths');
+
 const paths = {
     ...authPaths,
     ...userPaths,
@@ -14,4 +19,11 @@ const paths = {
     ...avaliacaoPaths
 };
  
+module.exports = paths;
+    ...postagemPaths,
+    ...orcamentoPaths,
+    ...especialidadePaths,
+    ...empresaEspecialidadePaths
+};
+
 module.exports = paths;

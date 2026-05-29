@@ -6,14 +6,7 @@ const Joi = require('joi');
  * Utiliza a biblioteca Joi para definir schemas de validação.
  */
 class PostagemValidation {
-    /**
-     * Validação para criar uma nova postagem.
-     * Valida que descricao e fotos estejam dentro dos limites permitidos.
-     * @param {Object} req - Requisição HTTP
-     * @param {Object} res - Resposta HTTP
-     * @param {Function} next - Próxima função de middleware
-     * @returns {void} Chama next() se validação passar ou retorna erro 400
-     */
+    // Valida criação de postagem (descricao max 1400 caracteres, fotos URIs válidas)
     createSchema(req, res, next) {
         const schema = Joi.object({
             descricao: Joi.string().max(1400).allow(null, '').messages({
@@ -33,14 +26,7 @@ class PostagemValidation {
         next();
     }
 
-    /**
-     * Validação para atualizar uma postagem.
-     * Valida que descricao e fotos estejam dentro dos limites permitidos.
-     * @param {Object} req - Requisição HTTP
-     * @param {Object} res - Resposta HTTP
-     * @param {Function} next - Próxima função de middleware
-     * @returns {void} Chama next() se validação passar ou retorna erro 400
-     */
+    // Valida atualização de postagem
     updateSchema(req, res, next) {
         const schema = Joi.object({
             descricao: Joi.string().max(1400).allow(null, '').messages({
@@ -60,14 +46,7 @@ class PostagemValidation {
         next();
     }
 
-    /**
-     * Validação para ID da postagem nos parâmetros da rota.
-     * Valida que o ID seja um número inteiro positivo.
-     * @param {Object} req - Requisição HTTP
-     * @param {Object} res - Resposta HTTP
-     * @param {Function} next - Próxima função de middleware
-     * @returns {void} Chama next() se validação passar ou retorna erro 400
-     */
+    // Valida ID da postagem (número inteiro positivo)
     validatePostagemIdParam(req, res, next) {
         const schema = Joi.object({
             id: Joi.number().integer().positive().required().messages({
@@ -85,14 +64,7 @@ class PostagemValidation {
         next();
     }
 
-    /**
-     * Validação para ID do usuário nos parâmetros da rota.
-     * Valida que o userId seja um número inteiro positivo.
-     * @param {Object} req - Requisição HTTP
-     * @param {Object} res - Resposta HTTP
-     * @param {Function} next - Próxima função de middleware
-     * @returns {void} Chama next() se validação passar ou retorna erro 400
-     */
+    // Valida ID do usuário (número inteiro positivo)
     validateUserIdParam(req, res, next) {
         const schema = Joi.object({
             userId: Joi.number().integer().positive().required().messages({

@@ -5,11 +5,14 @@ const authRoutes = require('./route/AuthRoute');
 const serviceRoutes = require('./route/ServiceRoute');
 const empresaRoutes = require('./route/EmpresaRoute');
 const historicoRoutes = require('./route/HistoricoRoute');
+const avaliacaoRoutes = require('./route/AvaliacaoRoute');
 const postagemRoutes = require('./route/PostagemRoute');
 const especialidadeRoutes = require('./route/EspecialidadeRoute');
 const orcamentoRoutes = require('./route/OrcamentoRoute');
 const empresaEspecialidadeRoutes = require('./route/EmpresaEspecialidadeRoute');
+=========
 const avaliacaoRoutes = require('./route/AvaliacaoRoute');
+>>>>>>>>> Temporary merge branch 2
 const setupSwagger = require('./config/swagger');
 const logger = require('./config/logger');
 require('dotenv').config();
@@ -27,12 +30,16 @@ app.use('/api', authRoutes);
 app.use('/api', serviceRoutes);
 app.use('/api', empresaRoutes);
 app.use('/api', historicoRoutes);
+app.use('/api', avaliacaoRoutes);
+
 app.use('/api', postagemRoutes);
 app.use('/api', especialidadeRoutes);
 app.use('/api', orcamentoRoutes);
 app.use('/api', empresaEspecialidadeRoutes);
+=========
 app.use('/api', avaliacaoRoutes);
 
+>>>>>>>>> Temporary merge branch 2
 
 app.get('/', (req, res) => {
     res.json({ message: "WorkStock API rodando com sucesso!" });

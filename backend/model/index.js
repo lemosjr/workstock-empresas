@@ -4,6 +4,7 @@ const ServiceModel = require('./ServiceModel');
 const EmpresaModel = require('./EmpresaModel');
 const HistoricoModel = require('./HistoricoModel');
 const RefreshTokenModel = require('./RefreshTokenModel');
+const AvaliacaoModel = require('./AvaliacaoModel');
 const PostagemModel = require('./PostagemModel');
 const EspecialidadeModel = require('./EspecialidadeModel');
 const EmpresaEspecialidadeModel = require('./EmpresaEspecialidadeModel');
@@ -36,6 +37,19 @@ db.Historico.belongsTo(db.ServiceRequest, { foreignKey: 'id_service', as: 'servi
 // Nova associação: User 1:N RefreshToken
 db.User.hasMany(db.RefreshToken, { foreignKey: 'id_usuario', as: 'refresh_tokens' });
 db.RefreshToken.belongsTo(db.User, { foreignKey: 'id_usuario', as: 'usuario' });
+
+// Um serviço tem uma avaliação 1:1
+db.ServiceRequest.hasOne(db.Avaliacao, { foreignKey: 'id_service', as: 'avaliacao' });
+db.Avaliacao.belongsTo(db.ServiceRequest, { foreignKey: 'id_service', as: 'servico' });
+
+// Uma empresa tem muitas avaliações
+db.Empresa.hasMany(db.Avaliacao, { foreignKey: 'id_empresa', as: 'avaliacao' });
+db.Avaliacao.belongsTo(db.Empresa, { foreignKey: 'id_empresa', as: 'empresa' });
+db.User.hasMany(db.Postagem, {foreignKey: 'id_usuario',as: 'postagens'});
+db.Postagem.belongsTo(db.User, {foreignKey: 'id_usuario',as: 'usuario'});
+// Nova associação: Empresa N:N Especialidade (via tabela pivô empresa_especialidade)
+db.Empresa.belongsToMany(db.Especialidade, { through: db.EmpresaEspecialidade, foreignKey: 'id_empresa', as: 'especialidades' });
+db.Especialidade.belongsToMany(db.Empresa, { through: db.EmpresaEspecialidade, foreignKey: 'id_especialidade', as: 'empresas' });
 
 // Método para registrar histórico automaticamente
 db.ServiceRequest.addHook('beforeUpdate', async (service, options) => {

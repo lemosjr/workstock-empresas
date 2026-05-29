@@ -129,8 +129,8 @@ class PostagemService {
 
     /**
      * Valida o conteúdo da postagem (usado tanto no create quanto no update)
-     * @param {Object} data - Dados da postagem
-     * @param {boolean} isUpdate - Se é uma atualização parcial
+     * dos da postagem
+     *  - Se é uma atualização parcial
      */
     #validatePostagemContent(data, isUpdate = false) {
         if (!data) throw new Error('Dados da postagem não fornecidos.');
